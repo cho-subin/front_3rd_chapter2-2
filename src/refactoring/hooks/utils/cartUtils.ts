@@ -1,4 +1,4 @@
-import { CartItem, Coupon } from "../../../types";
+import { CartItem, Coupon, Product } from "../../../types";
 
 // 해당 상품 할인 없이 총액 계산 후 수량에 따라 할인 적용
 export const calculateItemTotal = (item: CartItem) => {
@@ -79,4 +79,10 @@ export const updateCartItemQuantity = (
       return item;
     })
     .filter((item): item is CartItem => item !== null);
+};
+
+// advanced
+export const getRemainingStock = (cart: CartItem[], product: Product) => {
+  const cartItem = cart.find((item) => item.product.id === product.id);
+  return product.stock - (cartItem?.quantity || 0);
 };
