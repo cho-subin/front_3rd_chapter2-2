@@ -1,5 +1,10 @@
 import { useState } from "react";
 import { Discount, Product } from "../../types";
+import { findProduct } from "./utils/productUtils";
+import {
+  determineDiscountValue,
+  removeDiscountAtIndex,
+} from "./utils/discountUtils";
 
 export const useDiscountEditor = ({
   products,
@@ -19,10 +24,8 @@ export const useDiscountEditor = ({
     e: React.ChangeEvent<HTMLInputElement>,
     key: string
   ) => {
-    const value =
-      key === "quantity"
-        ? parseInt(e.target.value)
-        : parseInt(e.target.value) / 100;
+    const value = determineDiscountValue(e, key);
+
     setNewDiscount({
       ...newDiscount,
       [key]: value,
@@ -30,7 +33,7 @@ export const useDiscountEditor = ({
   };
 
   const addDiscount = (productId: string) => {
-    const updatedProduct = products.find((p) => p.id === productId);
+    const updatedProduct = findProduct(products, productId);
     if (updatedProduct) {
       const newProduct = {
         ...updatedProduct,
@@ -43,11 +46,11 @@ export const useDiscountEditor = ({
   };
 
   const removeDiscount = (productId: string, index: number) => {
-    const updatedProduct = products.find((p) => p.id === productId);
+    const updatedProduct = findProduct(products, productId);
     if (updatedProduct) {
       const newProduct = {
         ...updatedProduct,
-        discounts: updatedProduct.discounts.filter((_, i) => i !== index),
+        discounts: removeDiscountAtIndex(updatedProduct, index),
       };
       onProductUpdate(newProduct);
       updateEditingProduct(newProduct);

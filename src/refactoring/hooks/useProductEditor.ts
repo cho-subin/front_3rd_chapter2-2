@@ -1,5 +1,10 @@
 import { useState } from "react";
 import { Product } from "../../types";
+import {
+  findProduct,
+  ProductIdsManage,
+  updateProductInfo,
+} from "./utils/productUtils";
 
 export const useProductEditor = ({
   products,
@@ -30,11 +35,7 @@ export const useProductEditor = ({
   };
 
   const productAccordion = (productId: string) => {
-    setOpenProductIds((prev) => {
-      const newSet = new Set(prev);
-      newSet.has(productId) ? newSet.delete(productId) : newSet.add(productId);
-      return newSet;
-    });
+    setOpenProductIds((prev) => ProductIdsManage(prev, productId)); // 상태 반환
   };
 
   const editProduct = (product: Product) => {
@@ -43,14 +44,18 @@ export const useProductEditor = ({
 
   const productNameUpdate = (productId: string, newName: string) => {
     if (editingProduct && editingProduct.id === productId) {
-      const updatedProduct = { ...editingProduct, name: newName };
+      const updatedProduct = updateProductInfo(editingProduct, "name", newName);
       setEditingProduct(updatedProduct);
     }
   };
 
   const priceUpdate = (productId: string, newPrice: number) => {
     if (editingProduct && editingProduct.id === productId) {
-      const updatedProduct = { ...editingProduct, price: newPrice };
+      const updatedProduct = updateProductInfo(
+        editingProduct,
+        "price",
+        newPrice
+      );
       setEditingProduct(updatedProduct);
     }
   };
@@ -63,9 +68,9 @@ export const useProductEditor = ({
   };
 
   const stockUpdate = (productId: string, newStock: number) => {
-    const updatedProduct = products.find((p) => p.id === productId);
+    const updatedProduct = findProduct(products, productId);
     if (updatedProduct) {
-      const newProduct = { ...updatedProduct, stock: newStock };
+      const newProduct = updateProductInfo(updatedProduct, "stock", newStock);
       onProductUpdate(newProduct);
       setEditingProduct(newProduct);
     }
