@@ -174,14 +174,14 @@ const ProductAdmin = ({
                           type="number"
                           placeholder="수량"
                           value={newDiscount.quantity}
-                          onChange={(e) => onDiscountChange(e)}
+                          onChange={(e) => onDiscountChange(e, "quantity")}
                           className="w-1/3 p-2 border rounded"
                         />
                         <input
                           type="number"
                           placeholder="할인율 (%)"
                           value={newDiscount.rate * 100}
-                          onChange={(e) => onDiscountChange(e)}
+                          onChange={(e) => onDiscountChange(e, "rate")}
                           className="w-1/3 p-2 border rounded"
                         />
                         <button

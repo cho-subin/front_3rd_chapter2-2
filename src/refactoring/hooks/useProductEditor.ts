@@ -36,10 +36,17 @@ export const useProductEditor = ({
     setNewProduct({ ...newProduct, [key]: e.target.value });
   };
 
-  const onDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onDiscountChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    key: string
+  ) => {
+    const value =
+      key === "quantity"
+        ? parseInt(e.target.value)
+        : parseInt(e.target.value) / 100;
     setNewDiscount({
       ...newDiscount,
-      rate: parseInt(e.target.value) / 100,
+      [key]: value,
     });
   };
 
