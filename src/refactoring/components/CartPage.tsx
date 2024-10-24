@@ -2,6 +2,7 @@ import { CartItem, Coupon, Product } from "../../types.ts";
 import { useCart } from "../hooks";
 import {
   getMaxApplicableDiscount,
+  getMaxDiscount,
   getRemainingStock,
 } from "../hooks/utils/cartUtils.ts";
 
@@ -20,10 +21,6 @@ export const CartPage = ({ products, coupons }: Props) => {
     calculateTotal,
     selectedCoupon,
   } = useCart();
-
-  const getMaxDiscount = (discounts: { quantity: number; rate: number }[]) => {
-    return discounts.reduce((max, discount) => Math.max(max, discount.rate), 0);
-  };
 
   const { totalBeforeDiscount, totalAfterDiscount, totalDiscount } =
     calculateTotal();
