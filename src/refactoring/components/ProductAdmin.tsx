@@ -1,6 +1,7 @@
 import React from "react";
 import { useProductEditor } from "../hooks/useProductEditor";
 import { Product } from "../../types";
+import { useDiscountEditor } from "../hooks/useDiscountEditor";
 
 const ProductAdmin = ({
   products,
@@ -15,21 +16,25 @@ const ProductAdmin = ({
     isShowNewProductForm,
     openProductIds,
     newProduct,
-    newDiscount,
     editingProduct,
     showProductForm,
     onInputChange,
-    onDiscountChange,
     productAccordion,
     editProduct,
     productNameUpdate,
     priceUpdate,
     editComplete,
     stockUpdate,
-    addDiscount,
-    removeDiscount,
     addNewProduct,
+    updateEditingProduct,
   } = useProductEditor({ products, onProductUpdate, onProductAdd });
+
+  const { newDiscount, onDiscountChange, addDiscount, removeDiscount } =
+    useDiscountEditor({
+      products,
+      onProductUpdate,
+      updateEditingProduct,
+    });
 
   return (
     <div>

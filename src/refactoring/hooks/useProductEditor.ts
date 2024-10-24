@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Discount, Product } from "../../types";
+import { Product } from "../../types";
 
 export const useProductEditor = ({
   products,
@@ -12,11 +12,6 @@ export const useProductEditor = ({
 }) => {
   const [openProductIds, setOpenProductIds] = useState<Set<string>>(new Set());
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [newDiscount, setNewDiscount] = useState<Discount>({
-    quantity: 0,
-    rate: 0,
-  });
-
   const [isShowNewProductForm, setIsShowNewProductForm] = useState(false);
   const [newProduct, setNewProduct] = useState<Omit<Product, "id">>({
     name: "",
@@ -25,9 +20,7 @@ export const useProductEditor = ({
     discounts: [],
   });
 
-  const showProductForm = () => {
-    return setIsShowNewProductForm(!isShowNewProductForm);
-  };
+  const showProductForm = () => setIsShowNewProductForm(!isShowNewProductForm);
 
   const onInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -36,28 +29,10 @@ export const useProductEditor = ({
     setNewProduct({ ...newProduct, [key]: e.target.value });
   };
 
-  const onDiscountChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    key: string
-  ) => {
-    const value =
-      key === "quantity"
-        ? parseInt(e.target.value)
-        : parseInt(e.target.value) / 100;
-    setNewDiscount({
-      ...newDiscount,
-      [key]: value,
-    });
-  };
-
   const productAccordion = (productId: string) => {
     setOpenProductIds((prev) => {
       const newSet = new Set(prev);
-      if (newSet.has(productId)) {
-        newSet.delete(productId);
-      } else {
-        newSet.add(productId);
-      }
+      newSet.has(productId) ? newSet.delete(productId) : newSet.add(productId);
       return newSet;
     });
   };
@@ -96,31 +71,6 @@ export const useProductEditor = ({
     }
   };
 
-  const addDiscount = (productId: string) => {
-    const updatedProduct = products.find((p) => p.id === productId);
-    if (updatedProduct && editingProduct) {
-      const newProduct = {
-        ...updatedProduct,
-        discounts: [...updatedProduct.discounts, newDiscount],
-      };
-      onProductUpdate(newProduct);
-      setEditingProduct(newProduct);
-      setNewDiscount({ quantity: 0, rate: 0 });
-    }
-  };
-
-  const removeDiscount = (productId: string, index: number) => {
-    const updatedProduct = products.find((p) => p.id === productId);
-    if (updatedProduct) {
-      const newProduct = {
-        ...updatedProduct,
-        discounts: updatedProduct.discounts.filter((_, i) => i !== index),
-      };
-      onProductUpdate(newProduct);
-      setEditingProduct(newProduct);
-    }
-  };
-
   const addNewProduct = () => {
     const productWithId = { ...newProduct, id: Date.now().toString() };
     onProductAdd(productWithId);
@@ -133,23 +83,24 @@ export const useProductEditor = ({
     setIsShowNewProductForm(false);
   };
 
+  const updateEditingProduct = (updatedProduct: Product) => {
+    setEditingProduct(updatedProduct);
+  };
+
   return {
     isShowNewProductForm,
     openProductIds,
     newProduct,
-    newDiscount,
     editingProduct,
     showProductForm,
     onInputChange,
-    onDiscountChange,
     productAccordion,
     editProduct,
     productNameUpdate,
     priceUpdate,
     editComplete,
     stockUpdate,
-    addDiscount,
-    removeDiscount,
     addNewProduct,
+    updateEditingProduct,
   };
 };
