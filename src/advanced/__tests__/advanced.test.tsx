@@ -280,9 +280,5 @@ describe("advanced > ", () => {
       expect(product2).toHaveTextContent("재고: 18개");
       expect(product3).toHaveTextContent("재고: 19개");
     });
-
-    test("새로운 hook 함수르 만든 후에 테스트 코드를 작성해서 실행해보세요", () => {
-      expect(true).toBe(false);
-    });
   });
 });
